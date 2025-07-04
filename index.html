@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Produto e Rota</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            flex: 1;
+            text-align: center;
+        }
+        .logo {
+            height: 60px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 16px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        #resultado {
+            margin-top: 30px;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .produto {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 60px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div></div>
+        <h1>Consulta de Produto e Rota</h1>
+        <img src="https://dgranel.com.br/uploads/logomarca/549a101b578918f635ff71d2075ae3d9.webp" class="logo" alt="Logo">
+    </header>
+
+    <input type="text" id="busca" placeholder="Digite o nome do produto">
+    <button onclick="pesquisar()">Pesquisar</button>
+    <button onclick="limpar()">Limpar Histórico</button>
+
+    <div id="resultado"></div>
+
+    <footer>Gerenciamento de Risco (v.01)</footer>
+
+    <script>
+        const dadosCSV = `VLR_MERCADORIA,PRODUTO,ORIGEM,RF_ORIGEM,DESTINO,UF_DESTINO,KM
+R$ 20.917,68,Cal Pedro,Leopoldo,MG,Serra,ES,590
+R$ 10.523,30,Areia Lavada,Belo Horizonte,MG,Rio de Janeiro,RJ,450
+R$ 8.390,00,Cimento CP II,BH,MG,Vitoria,ES,600`;
+
+        const linhas = dadosCSV.trim().split('\n').slice(1);
+        const dados = linhas.map(l => {
+            const cols = l.split(',');
+            return {
+                valor: cols[0],
+                produto: cols[1].toLowerCase(),
+                origem: cols[2],
+                rf_origem: cols[3],
+                destino: cols[4],
+                uf_destino: cols[5],
+                km: cols[6]
+            };
+        });
+
+        function pesquisar() {
+            const busca = document.getElementById("busca").value.toLowerCase();
+            const resultado = document.getElementById("resultado");
+            resultado.innerHTML = "";
+
+            const encontrados = dados.filter(d => d.produto.includes(busca));
+
+            if (encontrados.length === 0) {
+                resultado.innerHTML = "<p>Nenhum produto encontrado.</p>";
+                return;
+            }
+
+            encontrados.forEach(d => {
+                const div = document.createElement("div");
+                div.className = "produto";
+                div.textContent = `${d.produto.charAt(0).toUpperCase() + d.produto.slice(1)} ${d.origem} ${d.rf_origem} X ${d.destino} ${d.uf_destino} ${d.km} KM ${d.valor}`;
+                resultado.appendChild(div);
+            });
+        }
+
+        function limpar() {
+            document.getElementById("busca").value = "";
+            document.getElementById("resultado").innerHTML = "";
+        }
+    </script>
+</body>
+</html>
