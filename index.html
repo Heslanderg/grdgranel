@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            font-size: 16px;
+        }
+        button {
+            padding: 8px 12px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #results {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta de Produto e Rota</h1>
+    <input type="text" id="productInput" placeholder="Digite o nome do produto">
+    <button onclick="search()">Pesquisar</button>
+    <button onclick="clearResults()">Limpar histórico</button>
+
+    <div id="results"></div>
+
+    <footer>Gerenciamento de Risco (v.01)</footer>
+
+    <script>
+        let data = [];
+
+        // Carregar CSV
+        fetch('Rotas_Produtos.csv')
+            .then(response => response.text())
+            .then(text => {
+                const lines = text.split('\n');
+                const headers = lines[0].split(';');
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(';');
+                    if (cols.length === headers.length) {
+                        data.push({
+                            valor: cols[0],
+                            produto: cols[1],
+                            origem: cols[2],
+                            uf_origem: cols[3],
+                            destino: cols[4],
+                            uf_destino: cols[5],
+                            km: cols[6]
+                        });
+                    }
+                }
+            });
+
+        function search() {
+            const input = document.getElementById("productInput").value.toLowerCase();
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+
+            const filtered = data.filter(d => d.produto.toLowerCase().includes(input));
+
+            if (filtered.length === 0) {
+                resultsDiv.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+                return;
+            }
+
+            filtered.forEach(d => {
+                const result = `${d.produto} ${d.origem} ${d.uf_origem} X ${d.destino} ${d.uf_destino} ${d.km} KM ${d.valor}`;
+                const p = document.createElement("p");
+                p.textContent = result;
+                resultsDiv.appendChild(p);
+            });
+        }
+
+        function clearResults() {
+            document.getElementById("results").innerHTML = "";
+            document.getElementById("productInput").value = "";
+        }
+    </script>
+</body>
+</html>
