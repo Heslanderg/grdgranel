@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Produto e Rota</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { display: inline-block; }
+        .logo { float: right; height: 60px; }
+        .resultado { margin-top: 20px; }
+        .linha { margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        #footer { margin-top: 50px; font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Consulta de Produto e Rota</h1>
+    <img src="https://dgranel.com.br/uploads/logomarca/549a101b578918f635ff71d2075ae3d9.webp" alt="Logo" class="logo">
+    <br><br>
+    <input type="text" id="busca" placeholder="Digite o nome do produto">
+    <button onclick="pesquisar()">Pesquisar</button>
+    <button onclick="limpar()">Limpar histórico</button>
+    <div class="resultado" id="resultado"></div>
+    <div id="footer">Gerenciamento de Risco (v.01)</div>
+    
+    <script>
+        const dados = [{'PRODUTO': 'Cal', 'ORIGEM': 'Pedro Leopoldo', 'UF_ORIGEM': 'MG', 'DESTINO': 'Serra', 'UF_DESTINO': 'ES', 'KM': '590', 'VLR_MERCADORIA': '20917.68'}, {'PRODUTO': 'Calcário', 'ORIGEM': 'Arcos', 'UF_ORIGEM': 'MG', 'DESTINO': 'Vitória', 'UF_DESTINO': 'ES', 'KM': '450', 'VLR_MERCADORIA': '15200.00'}];
+
+        function formatarValor(valor) {
+            return parseFloat(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function pesquisar() {
+            const termo = document.getElementById("busca").value.toLowerCase();
+            const resultadoDiv = document.getElementById("resultado");
+            resultadoDiv.innerHTML = "";
+
+            const filtrados = dados.filter(d => d.PRODUTO.toLowerCase().includes(termo));
+            
+            if (filtrados.length === 0) {
+                resultadoDiv.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+                return;
+            }
+
+            filtrados.forEach(d => {
+                const texto = `${d.PRODUTO} ${d.ORIGEM} ${d.UF_ORIGEM} X ${d.DESTINO} ${d.UF_DESTINO} ${d.KM} KM ${formatarValor(d.VLR_MERCADORIA)}`;
+                const linha = document.createElement("div");
+                linha.className = "linha";
+                linha.textContent = texto;
+                resultadoDiv.appendChild(linha);
+            });
+        }
+
+        function limpar() {
+            document.getElementById("busca").value = "";
+            document.getElementById("resultado").innerHTML = "";
+        }
+    </script>
+</body>
+</html>
