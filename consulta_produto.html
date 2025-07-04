@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Preço de Produto</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; }
+    input, button { padding: 10px; font-size: 16px; }
+    button { margin-left: 10px; cursor: pointer; }
+    #resultado { margin-top: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .linha { margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <h2>Consulta de Produto</h2>
+
+  <input type="file" id="arquivoCSV" accept=".csv">
+  <br><br>
+  <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
+  <button onclick="buscarProduto()">Pesquisar</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    let dados = [];
+
+    document.getElementById('arquivoCSV').addEventListener('change', function(e) {
+      const arquivo = e.target.files[0];
+      if (!arquivo) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const conteudo = e.target.result;
+        const linhas = conteudo.split(/\r?\n/);
+        const colunas = linhas[0].split(',');
+
+        dados = linhas.slice(1).map(linha => {
+          const valores = linha.split(',');
+          return {
+            produto: valores[0]?.trim().toLowerCase(),
+            valor: valores[1]?.trim()
+          };
+        });
+
+        alert('Arquivo carregado com sucesso!');
+      };
+      reader.readAsText(arquivo);
+    });
+
+    function buscarProduto() {
+      const termo = document.getElementById('produtoInput').value.trim().toLowerCase();
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = '';
+
+      const encontrados = dados.filter(item => item.produto.includes(termo));
+
+      if (encontrados.length === 0) {
+        resultadoDiv.innerHTML = '<p>Nenhum produto encontrado.</p>';
+        return;
+      }
+
+      encontrados.forEach(item => {
+        const valorFormatado = parseFloat(item.valor.replace(',', '.')).toLocaleString('pt-BR', {
+          style: 'currency', currency: 'BRL'
+        });
+
+        const linha = document.createElement('div');
+        linha.className = 'linha';
+        linha.textContent = `Produto: ${item.produto.toUpperCase()} | Valor: ${valorFormatado}`;
+        resultadoDiv.appendChild(linha);
+      });
+    }
+  </script>
+</body>
+</html>
