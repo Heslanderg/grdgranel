@@ -7,17 +7,36 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f9f9f9;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 900px;
+    }
+
     h1 {
       text-align: center;
+      margin-bottom: 25px;
     }
+
     input[type="text"] {
       padding: 10px;
       width: 300px;
       font-size: 16px;
     }
+
     button {
       padding: 10px 15px;
       font-size: 16px;
@@ -28,58 +47,70 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #218838;
     }
+
     table {
       width: 100%;
-      margin-top: 30px;
+      margin-top: 25px;
       border-collapse: collapse;
     }
+
     th, td {
       padding: 10px;
       border: 1px solid #ccc;
       text-align: center;
     }
+
     th {
       background-color: #e9ecef;
     }
+
     #msg {
       margin-top: 20px;
       color: red;
+      text-align: center;
     }
+
     footer {
-      margin-top: 50px;
+      margin-top: 40px;
       text-align: center;
       font-style: italic;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <h1>Consulta de Produto e Rota</h1>
+  <div class="container">
+    <h1>Consulta de Produto e Rota</h1>
 
-  <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
-  <button onclick="pesquisar()">Pesquisar</button>
-  <button onclick="limpar()">Limpar Histórico</button>
+    <div style="text-align: center;">
+      <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
+      <button onclick="pesquisar()">Pesquisar</button>
+      <button onclick="limpar()">Limpar Histórico</button>
+    </div>
 
-  <div id="msg"></div>
+    <div id="msg"></div>
 
-  <table id="tabela" style="display:none;">
-    <thead>
-      <tr>
-        <th>Produto</th>
-        <th>Origem</th>
-        <th>UF Origem</th>
-        <th>Destino</th>
-        <th>UF Destino</th>
-        <th>KM</th>
-        <th>Valor</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+    <table id="tabela" style="display:none;">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Origem</th>
+          <th>UF Origem</th>
+          <th>Destino</th>
+          <th>UF Destino</th>
+          <th>KM</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-  <footer>Gerenciamento de Risco (v.01)</footer>
+    <footer>Gerenciamento de Risco (v.01)</footer>
+  </div>
 
   <script>
     let dados = [];
