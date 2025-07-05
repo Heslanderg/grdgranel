@@ -85,6 +85,20 @@
 <body>
   <div class="container">
     
+    <!-- Título centralizado e logo à direita -->
+    <div style="position: relative; margin-bottom: 40px;">
+      <h1 style="text-align: center; margin: 0;">Consulta de Produto e Rota</h1>
+      <img src="D_granel.png" alt="Logo D Granel" style="position: absolute; top: 0; right: 0; height: 60px;">
+    </div>
+
+    <!-- Campo de busca com margem superior para afastar da imagem -->
+    <div style="text-align: center; margin-top: 60px;">
+      <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
+      <button onclick="pesquisar()">Pesquisar</button>
+      <button onclick="limpar()">Limpar Histórico</button>
+    </div>
+    
+    <!--
     <div style="position: relative; margin-bottom: 20px;">
       <h1 style="text-align: center; margin: 0;">Consulta de Produtos e Rotas</h1>
       <img src="D_granel.png" alt="Logo D Granel" style="position: absolute; top: 0; right: 0; height: 60px;">
@@ -95,7 +109,7 @@
       <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
       <button onclick="pesquisar()">Pesquisar</button>
       <button onclick="limpar()">Limpar Histórico</button>
-    </div>
+    </div> -->
 
     <div id="msg"></div>
 
