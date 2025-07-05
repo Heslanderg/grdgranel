@@ -1,122 +1,148 @@
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Consulta de Produto e Rota</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        input[type="text"] {
-            width: 60%;
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #resultados {
-            margin-top: 30px;
-            padding: 10px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-        }
-        .linha {
-            border-bottom: 1px solid #ccc;
-            padding: 8px 0;
-        }
-        footer {
-            margin-top: 50px;
-            text-align: center;
-            font-style: italic;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Consulta de Produto e Rota</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 5px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #e9ecef;
+    }
+    #msg {
+      margin-top: 20px;
+      color: red;
+    }
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Consulta de Produto e Rota</h1>
-        <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
-        <button onclick="pesquisarProduto()">Pesquisar</button>
-        <button onclick="limparHistorico()">Limpar Histórico</button>
-        <div id="resultados"></div>
-        <footer>Gerenciamento de Risco (v.01)</footer>
-    </div>
+  <h1>Consulta de Produto e Rota</h1>
 
-    <script>
-        let dados = [];
+  <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
+  <button onclick="pesquisar()">Pesquisar</button>
+  <button onclick="limpar()">Limpar Histórico</button>
 
-        async function carregarCSV() {
-            const response = await fetch('Rotas_Produtos.csv');
-            const texto = await response.text();
-            const linhas = texto.trim().split('\n').slice(1);
-            dados = linhas.map(linha => {
-                const [valor, produto, origem, rf_origem, destino, uf_destino, km] = linha.split(';');
-                return {
-                    produto: produto.trim().toUpperCase(),
-                    origem: origem.trim(),
-                    rf_origem: rf_origem.trim(),
-                    destino: destino.trim(),
-                    uf_destino: uf_destino.trim(),
-                    km: parseInt(km.trim()),
-                    valor: valor.trim()
-                };
-            });
-        }
+  <div id="msg"></div>
 
-        function pesquisarProduto() {
-            const termo = document.getElementById('produtoInput').value.trim().toUpperCase();
-            const container = document.getElementById('resultados');
-            container.innerHTML = "";
+  <table id="tabela" style="display:none;">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Origem</th>
+        <th>UF Origem</th>
+        <th>Destino</th>
+        <th>UF Destino</th>
+        <th>KM</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-            const encontrados = dados.filter(item => item.produto.includes(termo));
+  <footer>Gerenciamento de Risco (v.01)</footer>
 
-            if (encontrados.length === 0) {
-                container.innerHTML = "<p>Nenhum produto encontrado.</p>";
-                return;
-            }
+  <script>
+    let dados = [];
 
-            encontrados.forEach(item => {
-                const resultadoTexto = `${item.produto} ${item.origem} ${item.rf_origem} X ${item.destino} ${item.uf_destino} ${item.km} KM ${item.valor}`;
-                const div = document.createElement("div");
-                div.className = "linha";
-                div.textContent = resultadoTexto;
-                container.appendChild(div);
-            });
-        }
+    async function carregarCSV() {
+      const url = 'https://raw.githubusercontent.com/Heslanderg/produtos-web/main/Rotas_Produtos.csv';
+      const resp = await fetch(url);
+      const texto = await resp.text();
+      const linhas = texto.trim().split('\n').slice(1);
+      dados = linhas.map(linha => {
+        const [valor, produto, origem, rf_origem, destino, uf_destino, km] = linha.split(';');
+        return {
+          produto: produto?.trim().toUpperCase(),
+          origem: origem?.trim(),
+          rf_origem: rf_origem?.trim(),
+          destino: destino?.trim(),
+          uf_destino: uf_destino?.trim(),
+          km: km?.trim(),
+          valor: valor?.trim()
+        };
+      });
+    }
 
-        function limparHistorico() {
-            document.getElementById('produtoInput').value = "";
-            document.getElementById('resultados').innerHTML = "";
-        }
+    function pesquisar() {
+      const termo = document.getElementById('produtoInput').value.trim().toUpperCase();
+      const tabela = document.getElementById('tabela');
+      const tbody = tabela.querySelector("tbody");
+      const msg = document.getElementById("msg");
+      tbody.innerHTML = "";
+      msg.innerHTML = "";
 
-        carregarCSV();
-    </script>
+      const filtrados = dados.filter(item => item.produto?.includes(termo));
+      if (filtrados.length === 0) {
+        tabela.style.display = "none";
+        msg.innerText = "Nenhum produto encontrado.";
+        return;
+      }
+
+      filtrados.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.produto}</td>
+          <td>${item.origem}</td>
+          <td>${item.rf_origem}</td>
+          <td>${item.destino}</td>
+          <td>${item.uf_destino}</td>
+          <td>${item.km}</td>
+          <td>${item.valor}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      tabela.style.display = "";
+    }
+
+    function limpar() {
+      document.getElementById('produtoInput').value = '';
+      document.getElementById('tabela').style.display = 'none';
+      document.querySelector("#tabela tbody").innerHTML = "";
+      document.getElementById("msg").innerHTML = "";
+    }
+
+    carregarCSV();
+  </script>
 </body>
 </html>
