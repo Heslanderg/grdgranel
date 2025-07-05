@@ -11,7 +11,7 @@
             color: #333;
         }
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
@@ -20,7 +20,7 @@
         }
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         input[type="text"] {
             width: 60%;
@@ -42,19 +42,13 @@
         }
         #resultados {
             margin-top: 30px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #e9ecef;
+        .linha {
+            border-bottom: 1px solid #ccc;
+            padding: 8px 0;
         }
         footer {
             margin-top: 50px;
@@ -70,22 +64,7 @@
         <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
         <button onclick="pesquisarProduto()">Pesquisar</button>
         <button onclick="limparHistorico()">Limpar Histórico</button>
-        <div id="resultados">
-            <table id="tabelaResultados" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>Produto</th>
-                        <th>Origem</th>
-                        <th>UF Origem</th>
-                        <th>Destino</th>
-                        <th>UF Destino</th>
-                        <th>KM</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+        <div id="resultados"></div>
         <footer>Gerenciamento de Risco (v.01)</footer>
     </div>
 
@@ -112,41 +91,28 @@
 
         function pesquisarProduto() {
             const termo = document.getElementById('produtoInput').value.trim().toUpperCase();
-            const tabela = document.getElementById('tabelaResultados');
-            const tbody = tabela.querySelector("tbody");
-            tbody.innerHTML = "";
+            const container = document.getElementById('resultados');
+            container.innerHTML = "";
 
             const encontrados = dados.filter(item => item.produto.includes(termo));
 
             if (encontrados.length === 0) {
-                tabela.style.display = "none";
-                tbody.innerHTML = "";
-                const div = document.getElementById("resultados");
-                div.innerHTML = "<p>Nenhum produto encontrado.</p>";
+                container.innerHTML = "<p>Nenhum produto encontrado.</p>";
                 return;
             }
 
-            tabela.style.display = "";
             encontrados.forEach(item => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.produto}</td>
-                    <td>${item.origem}</td>
-                    <td>${item.rf_origem}</td>
-                    <td>${item.destino}</td>
-                    <td>${item.uf_destino}</td>
-                    <td>${item.km}</td>
-                    <td>${item.valor}</td>
-                `;
-                tbody.appendChild(row);
+                const resultadoTexto = `${item.produto} ${item.origem} ${item.rf_origem} X ${item.destino} ${item.uf_destino} ${item.km} KM ${item.valor}`;
+                const div = document.createElement("div");
+                div.className = "linha";
+                div.textContent = resultadoTexto;
+                container.appendChild(div);
             });
         }
 
         function limparHistorico() {
             document.getElementById('produtoInput').value = "";
-            const tabela = document.getElementById('tabelaResultados');
-            tabela.style.display = "none";
-            tabela.querySelector("tbody").innerHTML = "";
+            document.getElementById('resultados').innerHTML = "";
         }
 
         carregarCSV();
