@@ -96,6 +96,7 @@
       <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
       <button onclick="pesquisar()">Pesquisar</button>
       <button onclick="limpar()">Limpar Histórico</button>
+      <button onclick="voltar()">Voltar</button>
     </div>
     
     <!--
@@ -190,6 +191,10 @@
       document.getElementById('tabela').style.display = 'none';
       document.querySelector("#tabela tbody").innerHTML = "";
       document.getElementById("msg").innerHTML = "";
+    }
+
+    function voltar() {
+      window.location.href = "index.html"; // substitua por outra página se necessário
     }
 
     carregarCSV();
