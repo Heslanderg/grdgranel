@@ -72,6 +72,7 @@
     <input type="text" id="productInput" placeholder="Digite o nome do produto" />
     <button onclick="search()">Pesquisar</button>
     <button onclick="clearResults()">Limpar Histórico</button>
+    <button onclick="voltar()">Voltar</button>
 
     <div id="results"></div>
 
@@ -120,6 +121,10 @@
       const num = parseFloat(valor.replace(/\./g, '').replace(',', '.'));
       if (isNaN(num)) return valor;
       return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function voltar() {
+      window.location.href = "index.html";
     }
   </script>
 </body>
