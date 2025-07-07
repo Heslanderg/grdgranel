@@ -72,8 +72,10 @@
       appId: "1:943904597462:web:2fbd20540e351c30e0f077"
     };
 
+    // Inicializa o Firebase
     firebase.initializeApp(firebaseConfig);
 
+    // Verifica se o usuário está logado
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         // Se não estiver logado, redireciona para login.html
@@ -83,6 +85,10 @@
   </script>
   
   <div class="container">
+
+    <!-- Link "Sair" no canto superior direito -->
+    <div class="logout-link" onclick="logout()">Sair</div>
+    
     <h1>Portal de Consultas</h1>
 
     <a href="produtos.html" class="btn">Produtos por Valores</a>
