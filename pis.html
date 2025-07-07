@@ -1,9 +1,95 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Consulta PIS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 900px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 5px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #results {
+      margin-top: 20px;
+    }
+
+    .resultado {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-style: italic;
+      color: #666;
+    }
+  </style>
 </head>
+<body>
+  <div class="container">
+    <!-- Cabeçalho com título e logo -->
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <h1 style="margin: 0;">Página em Construção - Gerenciamento de Risco</h1>
+      <img src="D_granel.png" alt="Logo" style="height: 50px; margin-left: 20px;" draggable="false">
+    </div>
+
+    <!-- Campo de busca 
+    <div style="text-align: center; margin-top: 60px;">
+      <input type="text" id="productInput" placeholder="Digite o nome do produto" />
+      <button onclick="search()">Pesquisar</button>
+      <button onclick="clearResults()">Limpar Histórico</button>
+      <button onclick="voltar()">Voltar</button>
+    </div>
+
+    <!-- Resultados -->
+    <div id="results"></div>
+
+    <!-- Rodapé -->
+    <footer>Copyright © Gerenciamento de Risco • v3.0 2025</footer>
+  </div>
+</body>
 </html>
