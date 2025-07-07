@@ -107,7 +107,7 @@
   <script>
     let data = [];
 
-    fetch('https://raw.githubusercontent.com/Heslanderg/grdgranel/main/Produtos_Valor.csv')
+    fetch('https://raw.githubusercontent.com/Heslanderg/grdgranel/refs/heads/main/Produtos_Valor.csv')
       .then(response => response.text())
       .then(text => {
         const lines = text.trim().split('\n');
