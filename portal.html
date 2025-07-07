@@ -88,10 +88,23 @@
     // Verifica se o usuário está logado
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        // Se não estiver logado, redireciona para login.html
         window.location.href = "login.html";
       }
     });
+
+    // Função para logout com delay
+    function logout() {
+      firebase.auth().signOut()
+        .then(() => {
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 500); // espera 0.5 segundo antes de redirecionar
+        })
+        .catch(error => {
+          alert("Erro ao sair: " + error.message);
+        });
+    }
+    
   </script>
   
   <div class="container">
