@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta Judicial em Lote por CPF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      padding: 40px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .cpf-result {
+      background: #eef2ff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #6366f1;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Consulta Judicial em Lote por CPF</h2>
+    <textarea id="cpfList" placeholder="Digite um CPF por linha (somente números)"></textarea>
+    <button onclick="consultarTodos()">Consultar CPFs</button>
+
+    <div class="results" id="resultados"></div>
+  </div>
+
+  <script>
+    const baseDeDados = {
+      '12345678901': {
+        'BNMP (https://portalbnmp.cnj.jus.br/)': '✅ Sem mandados de prisão ou restrições criminais registradas.',
+        'CENSEC (https://www.censec.org.br/)': '✅ Nenhuma escritura de protesto vinculada.',
+        'TRT (https://pje.trtXX.jus.br/)': '✅ 1 processo trabalhista ativo, assunto: horas extras não pagas.',
+        'Receita Federal (https://servicos.receita.fazenda.gov.br/)': '✅ CPF regular e sem pendências fiscais.',
+        'Consumidor.gov.br (https://www.consumidor.gov.br/)': '✅ 2 reclamações resolvidas em 2023, motivo: cobrança indevida.',
+        'Justiça Estadual (https://www.tjsp.jus.br/)': '✅ Processo civil ativo por inadimplência contratual.',
+        'Protesto Nacional (https://www.protesto.com.br/)': '✅ Sem registros de protestos em cartórios.',
+        'Cadastro Positivo (https://www.serasa.com.br/)': '✅ Histórico financeiro positivo e sem atrasos nos últimos 12 meses.',
+        'Infocrim (https://www.ssp.sp.gov.br/infocrim)': '✅ Sem ocorrências criminais registradas nos últimos 5 anos.',
+        'TRF1 (https://processual.trf1.jus.br/)': '✅ Sem ações federais ativas.',
+        'TJDFT (https://pje.tjdft.jus.br/)': '✅ Sem ações civis registradas.',
+        'SINESP (https://sinesp.gov.br/)': '✅ Sem boletins de ocorrência em aberto.',
+        'BACEN (https://www.bcb.gov.br/)': '✅ Sem dívidas em instituições financeiras reguladas.',
+        'INSS (https://meu.inss.gov.br/)': '✅ Sem pendências cadastrais ou benefícios indeferidos.',
+        'Jusbrasil (https://www.jusbrasil.com.br/)': '✅ Consulta limpa, nenhum processo encontrado.',
+        'Escavador (https://www.escavador.com/)': '✅ Sem menções públicas em processos judiciais.',
+        'TSE - Situação Eleitoral (https://www.tse.jus.br/)': '✅ Regularidade eleitoral confirmada.',
+        'Serasa Consumidor (https://www.serasa.com.br/consultas)': '✅ Sem restrições financeiras.',
+        'SPC Brasil (https://www.spcbrasil.org.br/)': '✅ Nenhuma restrição de crédito.',
+        'CNJ (https://www.cnj.jus.br/)': '✅ Nenhuma pendência processual detectada.',
+        'PGFN Dívida Ativa (https://www.pgfn.fazenda.gov.br/)': '✅ Sem dívidas federais inscritas.',
+        'Portal da Transparência (https://www.portaltransparencia.gov.br/)': '✅ Nenhum vínculo ou pendência pública.',
+        'Junta Comercial (https://www.jucesp.sp.gov.br/)': '✅ Sem participação societária registrada.',
+        'DPVAT (https://www.consorciodpvat.com.br/)': '✅ Sem sinistros registrados.',
+        'Receita Estadual (https://www.sefaz.sp.gov.br/)': '✅ Sem pendências fiscais estaduais.',
+        'Procon (https://www.procon.sp.gov.br/)': '✅ Sem reclamações registradas.',
+        'Cartórios de Protesto Estaduais': '✅ Sem protestos em cartórios estaduais.',
+        'Conselho de Justiça Militar': '✅ Sem processos militares registrados.',
+        'Defensoria Pública': '✅ Sem benefícios ou processos em andamento.',
+        'Tribunal de Contas da União (https://www.tcu.gov.br/)': '✅ Sem pendências financeiras ou processos administrativos.'
+      },
+      '98765432100': {
+        'BNMP (https://portalbnmp.cnj.jus.br/)': '❌ 1 mandado de prisão expedido em 2021 por pensão alimentícia, situação: suspenso.',
+        'CENSEC (https://www.censec.org.br/)': '❌ Protesto registrado em 2020, valor: R$ 8.400,00.',
+        'TRT (https://pje.trtXX.jus.br/)': '❌ Processo arquivado em 2019, assunto: rescisão indireta.',
+        'Receita Federal (https://servicos.receita.fazenda.gov.br/)': '❌ CPF irregular com pendência de declaração IRPF 2022.',
+        'Consumidor.gov.br (https://www.consumidor.gov.br/)': '✅ Sem registros de reclamações.',
+        'Justiça Estadual (https://www.tjsp.jus.br/)': '❌ 2 execuções fiscais em andamento por dívida ativa.',
+        'Protesto Nacional (https://www.protesto.com.br/)': '❌ 3 protestos em aberto, mais recente em 2023.',
+        'Cadastro Positivo (https://www.serasa.com.br/)': '❌ Conta de energia elétrica em atraso há 6 meses.',
+        'Infocrim (https://www.ssp.sp.gov.br/infocrim)': '❌ 2 boletins de ocorrência por furto em 2020 e 2022.',
+        'TRF1 (https://processual.trf1.jus.br/)': '❌ 1 ação federal de cobrança de tributo ativo.',
+        'TJDFT (https://pje.tjdft.jus.br/)': '❌ Ação civil em fase inicial por danos morais.',
+        'SINESP (https://sinesp.gov.br/)': '❌ Histórico de boletim de ocorrência por perda de documentos.',
+        'BACEN (https://www.bcb.gov.br/)': '❌ Dívida ativa registrada com banco comercial.',
+        'INSS (https://meu.inss.gov.br/)': '❌ Requerimento de benefício indeferido por falta de tempo de contribuição.',
+        'Jusbrasil (https://www.jusbrasil.com.br/)': '❌ 3 processos encontrados: 2 civis, 1 criminal.',
+        'Escavador (https://www.escavador.com/)': '❌ Menção pública em ação de despejo de 2022.',
+        'TSE - Situação Eleitoral (https://www.tse.jus.br/)': '❌ Pendência eleitoral, ausência na última eleição.',
+        'Serasa Consumidor (https://www.serasa.com.br/consultas)': '❌ Restrições financeiras pendentes.',
+        'SPC Brasil (https://www.spcbrasil.org.br/)': '❌ Restrições ao crédito encontradas.',
+        'CNJ (https://www.cnj.jus.br/)': '❌ Pendências processuais encontradas.',
+        'PGFN Dívida Ativa (https://www.pgfn.fazenda.gov.br/)': '❌ Dívidas federais inscritas.',
+        'Portal da Transparência (https://www.portaltransparencia.gov.br/)': '✅ Sem vínculo ou pendência pública.',
+        'Junta Comercial (https://www.jucesp.sp.gov.br/)': '✅ Sem participação societária registrada.',
+        'DPVAT (https://www.consorciodpvat.com.br/)': '✅ Sem sinistros registrados.',
+        'Receita Estadual (https://www.sefaz.sp.gov.br/)': '❌ Pendências fiscais estaduais detectadas.',
+        'Procon (https://www.procon.sp.gov.br/)': '❌ Reclamações registradas recentemente.',
+        'Cartórios de Protesto Estaduais': '❌ Protestos registrados em cartórios estaduais.',
+        'Conselho de Justiça Militar': '✅ Sem processos militares registrados.',
+        'Defensoria Pública': '✅ Sem benefícios ou processos em andamento.',
+        'Tribunal de Contas da União (https://www.tcu.gov.br/)': '✅ Sem pendências financeiras ou processos administrativos.'
+      }
+    };
+
+    function consultarTodos() {
+      const input = document.getElementById('cpfList').value;
+      const listaCPFs = input.split('\n').map(cpf => cpf.trim()).filter(cpf => cpf !== '');
+      const resultadosDiv = document.getElementById('resultados');
+      resultadosDiv.innerHTML = '';
+
+      if (listaCPFs.length === 0) {
+        resultadosDiv.innerHTML = '<div style="color:red;">Por favor, insira ao menos um CPF válido.</div>';
+        return;
+      }
+
+      listaCPFs.forEach(cpf => {
+        const resultBox = document.createElement('div');
+        resultBox.className = 'cpf-result';
+
+        // Validação simples do CPF: deve ter 11 dígitos numéricos
+        if (!/^\d{11}$/.test(cpf)) {
+          resultBox.innerHTML = <strong>CPF ${cpf}:</strong><br><span style='color:red;'>CPF inválido (deve conter 11 dígitos numéricos).</span>;
+        } else {
+          // Se CPF existe na baseDeDados
+          if (baseDeDados.hasOwnProperty(cpf)) {
+            let html = <strong>CPF ${cpf}:</strong>\n;
+            const consultas = baseDeDados[cpf];
+            for (const [base, resultado] of Object.entries(consultas)) {
+              html += • ${base}: ${resultado}\n;
+            }
+            resultBox.textContent = html;
+          } else {
+            resultBox.innerHTML = <strong>CPF ${cpf}:</strong><br><span style='color:orange;'>Nenhum dado encontrado para este CPF na base simulada.</span>;
+          }
+        }
+
+        resultadosDiv.appendChild(resultBox);
+      });
+    }
+  </script>
+</body>
+</html>
