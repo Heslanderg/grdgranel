@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Consulta de Produtos e Rotas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 900px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 5px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 25px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e9ecef;
+    }
+
+    #msg {
+      margin-top: 20px;
+      color: red;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-style: italic;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <h1 style="margin: 0;">Consultar Produtos e suas Rotas</h1>
+      <img src="D_granel.png" alt="Logo" style="height: 50px; margin-left: 20px;">
+    </div>
+
+    <div style="text-align: center; margin-top: 60px;">
+      <input type="text" id="produtoInput" placeholder="Digite produto, origem ou destino" />
+      <button onclick="pesquisar()">Pesquisar</button>
+      <button onclick="limpar()">Limpar Histórico</button>
+      <button onclick="voltar()">Voltar</button>
+    </div>
+
+    <div id="msg"></div>
+
+    <table id="tabela" style="display:none;">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Origem</th>
+          <th>UF Origem</th>
+          <th>Destino</th>
+          <th>UF Destino</th>
+          <th>KM</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <footer>Copyright © Gerenciamento de Risco • v3.0 2025</footer>
+  </div>
+
+  <script>
+    let dados = [];
+
+    async function carregarCSV() {
+      const url = 'https://raw.githubusercontent.com/Heslanderg/produtos-web/main/Rotas_Produtos.csv';
+      const resp = await fetch(url);
+      const texto = await resp.text();
+      const linhas = texto.trim().split('\n').slice(1);
+      dados = linhas.map(linha => {
+        const [valor, produto, origem, rf_origem, destino, uf_destino, km] = linha.split(';');
+        return {
+          produto: produto?.trim(),
+          origem: origem?.trim(),
+          rf_origem: rf_origem?.trim(),
+          destino: destino?.trim(),
+          uf_destino: uf_destino?.trim(),
+          km: km?.trim(),
+          valor: valor?.trim()
+        };
+      });
+    }
+
+    function normalizar(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function pesquisar() {
+      const termo = normalizar(document.getElementById('produtoInput').value.trim());
+      const tabela = document.getElementById('tabela');
+      const tbody = tabela.querySelector("tbody");
+      const msg = document.getElementById("msg");
+      tbody.innerHTML = "";
+      msg.innerHTML = "";
+
+      const filtrados = dados.filter(item => {
+        return normalizar(item.produto).includes(termo) ||
+               normalizar(item.origem).includes(termo) ||
+               normalizar(item.destino).includes(termo);
+      });
+
+      if (filtrados.length === 0) {
+        tabela.style.display = "none";
+        msg.innerText = "Nenhum resultado encontrado.";
+        return;
+      }
+
+      filtrados.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.produto}</td>
+          <td>${item.origem}</td>
+          <td>${item.rf_origem}</td>
+          <td>${item.destino}</td>
+          <td>${item.uf_destino}</td>
+          <td>${item.km}</td>
+          <td>${item.valor}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      tabela.style.display = "";
+    }
+
+    function limpar() {
+      document.getElementById('produtoInput').value = '';
+      document.getElementById('tabela').style.display = 'none';
+      document.querySelector("#tabela tbody").innerHTML = "";
+      document.getElementById("msg").innerHTML = "";
+    }
+
+    function voltar() {
+      window.location.href = "portal.html";
+    }
+
+    carregarCSV();
+  </script>
+</body>
+</html>
