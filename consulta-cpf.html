@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta Judicial por CPF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      padding: 40px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .results div {
+      background: #eef2ff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-left: 4px solid #6366f1;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Consulta Judicial por CPF</h2>
+    <input type="text" id="cpfInput" placeholder="Digite o CPF (somente números)" />
+    <button onclick="consultarCPF()">Consultar</button>
+
+    <div class="results" id="resultados"></div>
+  </div>
+
+  <script>
+    function consultarCPF() {
+      const cpf = document.getElementById('cpfInput').value;
+      const res = document.getElementById('resultados');
+      res.innerHTML = '';
+
+      if (!cpf.match(/^\d{11}$/)) {
+        res.innerHTML = '<div>CPF inválido. Insira 11 dígitos numéricos.</div>';
+        return;
+      }
+
+      // Simulação dos resultados — aqui você integraria com backend futuramente
+      const resultadosSimulados = [
+        {
+          fonte: 'Jusbrasil',
+          info: 'Encontrada 1 ação cível em São Paulo (2022).'
+        },
+        {
+          fonte: 'BNMP - CNJ',
+          info: 'Sem mandados de prisão encontrados.'
+        },
+        {
+          fonte: 'Justiça Federal',
+          info: 'Certidão negativa disponível.'
+        }
+      ];
+
+      resultadosSimulados.forEach(item => {
+        const bloco = document.createElement('div');
+        bloco.innerHTML = `<strong>${item.fonte}:</strong><br>${item.info}`;
+        res.appendChild(bloco);
+      });
+    }
+  </script>
+</body>
+</html>
