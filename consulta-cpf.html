@@ -54,6 +54,7 @@
     <h2>Consulta Judicial por CPF</h2>
     <input type="text" id="cpfInput" placeholder="Digite o CPF (somente números)" />
     <button onclick="consultarCPF()">Consultar</button>
+    <button onclick="voltar()">Voltar</button>
 
     <div class="results" id="resultados"></div>
   </div>
@@ -91,6 +92,11 @@
         res.appendChild(bloco);
       });
     }
+
+    function voltar() {
+      window.location.href = "portal.html";
+    }
+    
   </script>
 </body>
 </html>
