@@ -3,7 +3,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Portal de Consulta</title>
+  <title>Portal de Consultas</title>
+
+  <!-- 🔒 Firebase SDK (ADICIONADO) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -55,6 +60,28 @@
   </style>
 </head>
 <body>
+
+  <!-- 🔒 Verificação de autenticação (ADICIONADO) -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUkv8NusSUZkI2LR4xi9J5bjTdv7Uh-kg",
+      authDomain: "grdgranel-app.firebaseapp.com",
+      projectId: "grdgranel-app",
+      storageBucket: "grdgranel-app.appspot.com",
+      messagingSenderId: "943904597462",
+      appId: "1:943904597462:web:2fbd20540e351c30e0f077"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        // Se não estiver logado, redireciona para login.html
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+  
   <div class="container">
     <h1>Portal de Consultas</h1>
 
