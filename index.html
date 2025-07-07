@@ -75,12 +75,12 @@
       const password = document.getElementById('password').value;
       const errorDiv = document.getElementById('error');
 
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
-          window.location.href = "portal.html";
+      firebase.auth().signInWithEmailAndPassword(email, senha)
+        .then(userCredential => {
+          window.location.href = "portal.html"; // Redireciona após sucesso
         })
         .catch(error => {
-          errorDiv.textContent = "E-mail ou senha inválidos.";
+          alert("Login inválido. Verifique o e-mail e senha.");
         });
     }
   </script>
