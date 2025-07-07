@@ -52,26 +52,13 @@
       background-color: #218838;
     }
 
-    table {
-      width: 100%;
-      margin-top: 25px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-
-    th {
-      background-color: #e9ecef;
-    }
-
-    #msg {
+    #results {
       margin-top: 20px;
-      color: red;
-      text-align: center;
+    }
+
+    .resultado {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
     }
 
     footer {
@@ -84,46 +71,55 @@
 </head>
 <body>
   <div class="container">
-    
-    <!-- Título centralizado e logo à direita -->
+    <!-- Cabeçalho com título e logo -->
     <div style="display: flex; justify-content: center; align-items: center;">
       <h1 style="margin: 0;">Consultar Produtos e seus Valores</h1>
-      <img src="D_granel.png" alt="Logo" style="height: 50px; margin-left: 20px;">
+      <img src="D_granel.png" alt="Logo" style="height: 50px; margin-left: 20px;" draggable="false">
     </div>
 
-    <!-- Campo de busca com margem superior para afastar da imagem -->
+    <!-- Campo de busca -->
     <div style="text-align: center; margin-top: 60px;">
-      <input type="text" id="produtoInput" placeholder="Digite o nome do produto" />
-      <button onclick="pesquisar()">Pesquisar</button>
-      <button onclick="limpar()">Limpar Histórico</button>
+      <input type="text" id="productInput" placeholder="Digite o nome do produto" />
+      <button onclick="search()">Pesquisar</button>
+      <button onclick="clearResults()">Limpar Histórico</button>
       <button onclick="voltar()">Voltar</button>
     </div>
 
-    <footer>Copyright © Gerenciamento de Risco • v3.0 2025</footer>
-
+    <!-- Resultados -->
     <div id="results"></div>
-    
+
+    <!-- Rodapé -->
+    <footer>Copyright © Gerenciamento de Risco • v3.0 2025</footer>
   </div>
 
   <script>
     let data = [];
 
+    // Função para normalizar texto (remove acentos e ignora maiúsculas/minúsculas)
+    function normalize(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    // Carrega o CSV hospedado no GitHub
     fetch('https://raw.githubusercontent.com/Heslanderg/grdgranel/refs/heads/main/Produtos_Valor.csv')
       .then(response => response.text())
       .then(text => {
         const lines = text.trim().split('\n');
         for (let i = 1; i < lines.length; i++) {
           const [produto, valor] = lines[i].split(';');
-          data.push({ produto: produto.trim(), valor: valor.trim() });
+          if (produto && valor) {
+            data.push({ produto: produto.trim(), valor: valor.trim() });
+          }
         }
       });
 
+    // Pesquisa os produtos
     function search() {
-      const input = document.getElementById("productInput").value.toLowerCase();
+      const input = normalize(document.getElementById("productInput").value);
       const resultsDiv = document.getElementById("results");
       resultsDiv.innerHTML = "";
 
-      const filtered = data.filter(d => d.produto.toLowerCase().includes(input));
+      const filtered = data.filter(d => normalize(d.produto).includes(input));
 
       if (filtered.length === 0) {
         resultsDiv.innerHTML = "<p>Nenhum produto encontrado.</p>";
@@ -138,17 +134,20 @@
       });
     }
 
+    // Limpa os resultados
     function clearResults() {
       document.getElementById("results").innerHTML = "";
       document.getElementById("productInput").value = "";
     }
 
+    // Formata para R$ 0.000,00
     function formatCurrency(valor) {
       const num = parseFloat(valor.replace(/\./g, '').replace(',', '.'));
       if (isNaN(num)) return valor;
       return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
+    // Voltar para index
     function voltar() {
       window.location.href = "index.html";
     }
