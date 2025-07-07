@@ -4,8 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Login - Portal de Consultas</title>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,6 +32,8 @@
       width: 250px;
       margin-bottom: 15px;
       display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
     button {
@@ -36,6 +41,7 @@
       background-color: #28a745;
       color: white;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
     }
 
@@ -63,7 +69,7 @@
       apiKey: "AIzaSyBUkv8NusSUZkI2LR4xi9J5bjTdv7Uh-kg",
       authDomain: "grdgranel-app.firebaseapp.com",
       projectId: "grdgranel-app",
-      storageBucket: "grdgranel-app.firebasestorage.app",
+      storageBucket: "grdgranel-app.appspot.com",
       messagingSenderId: "943904597462",
       appId: "1:943904597462:web:2fbd20540e351c30e0f077"
     };
@@ -75,12 +81,13 @@
       const password = document.getElementById('password').value;
       const errorDiv = document.getElementById('error');
 
-      firebase.auth().signInWithEmailAndPassword(email, senha)
+      firebase.auth().signInWithEmailAndPassword(email, password)
         .then(userCredential => {
-          window.location.href = "portal.html"; // Redireciona após sucesso
+          window.location.href = "portal.html"; // redireciona se logado
         })
         .catch(error => {
-          alert("Login inválido. Verifique o e-mail e senha.");
+          console.error(error);
+          errorDiv.textContent = "E-mail ou senha inválidos.";
         });
     }
   </script>
