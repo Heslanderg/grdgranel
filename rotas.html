@@ -120,7 +120,7 @@
     let dados = [];
 
     async function carregarCSV() {
-      const url = 'https://raw.githubusercontent.com/Heslanderg/produtos-web/main/Rotas_Produtos.csv';
+      const url = 'https://raw.githubusercontent.com/projects-cloud/grdgranel/main/Rotas_Produtos.csv';
       const resp = await fetch(url);
       const texto = await resp.text();
       const linhas = texto.trim().split('\n').slice(1);
