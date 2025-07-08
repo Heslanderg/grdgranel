@@ -101,7 +101,7 @@
     }
 
     // Carrega o CSV hospedado no GitHub
-    fetch('https://raw.githubusercontent.com/Heslanderg/grdgranel/main/Produtos_Valor.csv')
+    fetch('https://raw.githubusercontent.com/projects-cloud/grdgranel/main/Produtos_Valor.csv')
       .then(response => response.text())
       .then(text => {
         const lines = text.trim().split('\n');
