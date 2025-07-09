@@ -1,6 +1,6 @@
 
 (function() {
-  const TEMPO_LIMITE = 30 * 60 * 1000; // 10 minutos
+  const TEMPO_LIMITE = 30 * 60 * 1000; // 30 minutos
   let timeout;
 
   function resetarInatividade() {
